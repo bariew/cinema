@@ -2,50 +2,46 @@
 /**
  * @var yii\web\View $this
  */
-$this->title = 'My Yii Application';
+$this->title = 'Cinema API';
 ?>
 <div class="site-index">
 
     <div class="jumbotron">
-        <h1>Congratulations!</h1>
-
-        <p class="lead">You have successfully created your Yii-powered application.</p>
-
-        <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Get started with Yii</a></p>
+        <h1>Cinema API</h1>
+        <p class="lead">Test Yii2 application.</p>
     </div>
 
     <div class="body-content">
-
+        <label>Headers:</label>
+        <ul>
+            <li> Getting json: "Accept: application/json" </li>
+            <li> Sending POST: "Content-Type: application/x-www-form-urlencoded" </li>
+            <li> Pagination: use GET params 'page' and 'per-page' </li>
+        </ul>
         <div class="row">
             <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
+                <h2>Sessions by cinema unit</h2>
+                <p><pre>GET /api/cinema/&ltcinema_title&gt/schedule[?hall_title=hallTitle]</pre></p>
             </div>
             <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
+                <h2>Sessions by film title</h2>
+                <p><pre>GET /api/film/&ltfilm_title&gt/schedule</pre></p>
             </div>
             <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/extensions/">Yii Extensions &raquo;</a></p>
+                <h2>Session by id</h2>
+                <p><pre>GET /api/session/&ltsession_id&gt/places</pre></p>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-4">
+                <h2>Buy tickets</h2>
+                <p><pre>POST /api/tickets/buy</pre></p>
+                <p><pre>post body example: session_id=44&places[1][]=8&places[2][]=5</pre></p>
+            </div>
+            <div class="col-lg-4">
+                <h2>Reject order</h2>
+                <p><pre>DELETE /api/tickets/reject/&ltorder_id&gt</pre></p>
             </div>
         </div>
 

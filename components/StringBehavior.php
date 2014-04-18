@@ -42,7 +42,7 @@ class StringBehavior extends Behavior
     public function unstringify()
     {
         foreach ($this->attributes as $attribute) {
-            $this->owner->$attribute = json_decode($this->owner->$attribute);
+            $this->owner->setAttribute($attribute, json_decode($this->owner->$attribute, true));
         }
     }
 }

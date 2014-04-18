@@ -29,9 +29,9 @@ class Order extends \yii\db\ActiveRecord
     {
         return [
             [['unit_id', 'session_id'], 'integer'],
+            [['session_id', 'places'], 'required'],
             [['places'], 'safe'],
             [['cost'], 'number'],
-            [['token'], 'string', 'max' => 255]
         ];
     }
 
@@ -44,7 +44,6 @@ class Order extends \yii\db\ActiveRecord
             'id' => 'ID',
             'unit_id' => 'Unit ID',
             'session_id' => 'Session ID',
-            'token' => 'Token',
             'places' => 'Places',
             'cost' => 'Cost',
         ];
@@ -65,7 +64,7 @@ class Order extends \yii\db\ActiveRecord
     
     public function getSession()
     {
-        return $this->hasOne(\app\modules\cinema\models\Session, ['id'=>'session_id']);
+        return $this->hasOne('\app\modules\cinema\models\Session', ['id'=>'session_id'])->one();
     }
     
     public function beforeSave($insert) 
@@ -74,14 +73,13 @@ class Order extends \yii\db\ActiveRecord
             return false;
         }
         if($this->isNewRecord){
-            $this->token = $this->generateToken();
+            $this->id = $this->generateToken();
         }
-        if($this->oldAttributesBehavior->changed('places')){
-            $this->getSession()
-                ->savePlaces($this->oldAttributesBehavior->attributes, $this->places);
-        }
-        
-        //return true;
+        $this->getSession()->savePlaces(
+            (array) @$this->oldAttributes2['places'], 
+            json_decode($this->places, true)
+        );
+        return true;
     }
     
     public function beforeDelete() 

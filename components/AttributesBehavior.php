@@ -12,7 +12,7 @@ use yii\db\ActiveRecord;
 
 class AttributesBehavior extends Behavior
 {
-    public $attributes = array();
+    public $oldAttributes2 = array();
     
     public function events() 
     {
@@ -24,11 +24,11 @@ class AttributesBehavior extends Behavior
     
     public function setOldAttributes()
     {
-        $this->attributes = $this->owner->attributes;
+        $this->oldAttributes2 = $this->owner->attributes;
     }
     
-    public function changed($attribute)
+    public function attributeChanged($attribute)
     {
-        return $this->attributes[$attribute] !== $this->owner->attributes[$attribute];
+        return $this->oldAttributes2[$attribute] !== $this->owner->attributes[$attribute];
     }
 }

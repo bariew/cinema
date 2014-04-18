@@ -93,4 +93,12 @@ class SiteController extends Controller
     {
         return $this->render('about');
     }
+    
+    public function actionTest($id = false)
+    {
+        $order = ($id) 
+            ?  \app\modules\cinema\models\Order::find()->one()
+            :  new \app\modules\cinema\models\Order;
+        print_r($order->oldAttributes2);
+    }
 }

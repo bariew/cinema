@@ -19,18 +19,30 @@ class Session extends \yii\db\ActiveRecord
 {
     public function savePlaces($add = [], $remove = [])
     {
-        $searchPlaces = json_encode($this->places);
-        foreach ($remove as $key => $places) {
-            $this->places[$key] = array_diff($this->places[$key], $places);
-        }
+        $allPlaces = $this->places;
+        $busy = [];
         foreach ($add as $key => $places){
-            $this->places[$key] = array_values(array_unique(array_merge($this->places[$key], $places)));
+            $this->addPlaces($allPlaces, $key, array_merge($allPlaces[$key], $places));
         }
-        if(!$this->updateAll(['places'=>json_encode($this->places)], "id={$this->id} AND places='{$searchPlaces}'")){
-            throw new \yii\web\HttpException(400, 'Places are busy!');
+        foreach ($remove as $key => $places) {
+            if(count(array_intersect($places, $allPlaces[$key])) != count($places)){
+                $busy[$key] = array_diff($places, $allPlaces[$key]);
+            }
+            $this->addPlaces($allPlaces, $key, array_diff($allPlaces[$key], $places));
         }
+        if($busy){
+            throw new \yii\web\HttpException(400, "Some places are already busy: " . json_encode($busy));
+        }
+        $this->places = $allPlaces;
+        $this->save();
     }
     
+    private function addPlaces(&$places, $key, $data)
+    {
+        $data = array_unique($data);
+        asort($data);
+        $places[$key] = array_values($data);
+    }
     /**
      * @inheritdoc
      */
@@ -73,6 +85,9 @@ class Session extends \yii\db\ActiveRecord
     public function behaviors()
     {
         return [
+            'queueBehavior'     => [
+                'class' => \app\components\QueueArBehavior::className(),
+            ],
             'stringifyBehavior' => [
                 'class' => \app\components\StringBehavior::className(),
                 'attributes' => ['places'],

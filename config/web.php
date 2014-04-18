@@ -10,15 +10,24 @@ $config = [
     ],
     'components'=> [
         'urlManager' => [
-            'enablePrettyUrl' => true,
-            'showScriptName' => false,
-            'enableStrictParsing' => true,
+            'enablePrettyUrl'       => true,
+            'showScriptName'        => false,
+            'enableStrictParsing'   => true,
             'rules' => [
+                // cinema rules
+                'api/cinema/<unit_title>/schedule'  => 'cinema/session/index',
+                'api/film/<film_title>/schedule'    => 'cinema/session/index',
+                'api/session/<id>/places'           => 'cinema/session/view',
+                'api/tickets/buy'                   => 'cinema/order/create',
+                'api/tickets/reject/<id>'        => 'cinema/order/delete',
+                
                 ['class' => 'yii\rest\UrlRule', 'controller' => [
                     'cinema/unit', 'cinema/film', 'cinema/hall', 'cinema/session', 'cinema/order', 
                 ]],
+                // all rules
                 '/' => 'site/index',
-                '<action:(login|logout|about|contact)>' => 'site/<action>',
+                '<module>/<controller>/<action>'  => '<module>/<controller>/<action>',
+                '<action>' => 'site/<action>',
             ],
         ],
         'cache' => [

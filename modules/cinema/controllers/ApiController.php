@@ -4,6 +4,7 @@ namespace app\modules\cinema\controllers;
 
 use yii\rest\ActiveController;
 use yii\data\ActiveDataProvider;
+use Yii;
 
 class ApiController extends ActiveController
 {
@@ -23,8 +24,12 @@ class ApiController extends ActiveController
     public function filterIndex()
     {
         $modelClass = $this->modelClass;
+        $params = array_diff_key(
+            Yii::$app->request->queryParams,
+            array_flip(['q', 'page', 'per-page'])
+        );
         return new ActiveDataProvider([
-            'query' => $modelClass::find()->where(@$_GET[$this->getShortModelClass()]),
+            'query' => $modelClass::find()->where($params),
         ]);
     }
     
@@ -35,10 +40,5 @@ class ApiController extends ActiveController
             ['models', ''], 
             get_called_class()
         );
-    }
-    
-    public function getShortModelClass()
-    {
-        return end(explode('\\', $this->modelClass));
     }
 }
