@@ -30,11 +30,27 @@ class Order extends \yii\db\ActiveRecord
         return [
             [['unit_id', 'session_id'], 'integer'],
             [['session_id', 'places'], 'required'],
-            [['places'], 'safe'],
+            [['places'], 'validatePlaces'],
             [['cost'], 'number'],
         ];
     }
-
+    
+    public function validatePlaces()
+    {
+        if(!is_array($this->places)){
+            return $this->addError('places', 'Should be an array');
+        }
+        foreach($this->places as $place){
+            if(!is_array($place)){
+                return $this->addError('places', 'Should be 2-dimentional array');
+            }
+            foreach($place as $num){
+                if(!is_numeric($num)){
+                    return $this->addError('places', 'Must contain only numbers');
+                }
+            }
+        }
+    }
     /**
      * @inheritdoc
      */
